@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidx.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
@@ -63,7 +63,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.datastore.preferences)
+    //noinspection UseTomlInstead
+    implementation("androidx.datastore:datastore-preferences:1.1.5")
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
