@@ -3,15 +3,18 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
+    id ("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-
-    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
     namespace = "com.diplom.mediresult"
     compileSdk = 35
+
+    //val key: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("supabaseKey")
+    //val url: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("supabaseUrl")
+
 
     defaultConfig {
         applicationId = "com.diplom.mediresult"
@@ -63,13 +66,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //noinspection UseTomlInstead
-    implementation("androidx.datastore:datastore-preferences:1.1.5")
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.lifecycle.viewmodel.compose)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -79,4 +78,11 @@ dependencies {
     implementation(libs.postgrest.kt)
     implementation(libs.auth.kt)
     implementation(libs.realtime.kt)
+    implementation(libs.ktor.client.android)
+
+    implementation(libs.hilt.android)
+    ksp(libs.dagger.hilt.android.compiler)
+
+    implementation(libs.core)
+    implementation(libs.sheets.compose.dialogs.calendar)
 }
