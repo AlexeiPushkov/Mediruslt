@@ -3,6 +3,7 @@ package com.diplom.mediresult.presentation.components
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextField
@@ -49,36 +50,40 @@ fun CustomDatePicker(
     }
     val backgroundGray = Color(0xFFF5F5F9)
     val textGray = Color(0xFF7E7E9A)
-    TextField(
-        modifier = Modifier.clickable { //Click event
-            open.value = true
-        },
-        enabled = false,// <- Add this to make click event work
-        value = value.format(DateTimeFormatter.ISO_DATE) ,
-        onValueChange = {},
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.colors(
-            unfocusedTextColor = textGray,
-            focusedTextColor = textGray,
-            focusedContainerColor = backgroundGray,
-            unfocusedContainerColor = backgroundGray,
-            focusedLabelColor = textGray,
-            unfocusedLabelColor = textGray,
-            focusedPlaceholderColor = textGray,
-            unfocusedPlaceholderColor = textGray,
-            cursorColor = textGray,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedSupportingTextColor = textGray,
-            errorTextColor = textGray,
-            errorSupportingTextColor = textGray,
-            errorLabelColor = textGray,
-            errorCursorColor = textGray,
-            errorSuffixColor = textGray,
-            errorIndicatorColor = Color.Transparent,
-            errorContainerColor = backgroundGray
+    MediresultTheme {
+        TextField(
+            modifier = Modifier
+                .width(300.dp)
+                .clickable { //Click event
+                open.value = true
+            },
+            enabled = false,// <- Add this to make click event work
+            value = value.format(DateTimeFormatter.ISO_DATE),
+            onValueChange = {},
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedTextColor = textGray,
+                focusedTextColor = textGray,
+                focusedContainerColor = backgroundGray,
+                unfocusedContainerColor = backgroundGray,
+                focusedLabelColor = textGray,
+                unfocusedLabelColor = textGray,
+                focusedPlaceholderColor = textGray,
+                unfocusedPlaceholderColor = textGray,
+                cursorColor = textGray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedSupportingTextColor = textGray,
+                errorTextColor = textGray,
+                errorSupportingTextColor = textGray,
+                errorLabelColor = textGray,
+                errorCursorColor = textGray,
+                errorSuffixColor = textGray,
+                errorIndicatorColor = Color.Transparent,
+                errorContainerColor = backgroundGray
+            )
         )
-    )
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

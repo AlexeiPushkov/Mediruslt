@@ -46,12 +46,12 @@ fun MediresultTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> LightColorScheme
         else -> LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
         content = content
     )

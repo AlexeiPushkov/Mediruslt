@@ -7,12 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,17 +55,23 @@ fun LoginScreen(
 
     val state = viewModel.state
 
+    val scrollState = rememberScrollState()
+
     var currentUserState by remember { mutableStateOf("") }
     val userState by viewModel.userState
     Column(
-        modifier = Modifier.fillMaxSize().padding(10.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         Text(
             text = "Добро пожаловать!",
             fontSize = 20.sp,
-            color = Color.Blue
+            color = Color.Blue,
+            fontWeight = FontWeight.Bold
         )
         Spacer(
             modifier = Modifier.height(30.dp)
@@ -152,7 +160,7 @@ fun LoginScreen(
             modifier = Modifier.height(20.dp)
         )
         Row(
-            modifier = Modifier.width(270.dp),
+            modifier = Modifier.width(300.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {

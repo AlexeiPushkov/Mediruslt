@@ -20,4 +20,9 @@ class SharedPreferencesKey(
         val sharedPreferences = context.getSharedPreferences(MY_PREF_KEY, Context.MODE_PRIVATE)
         return sharedPreferences.getString(key, null)
     }
+
+    fun clearPrefernces(){
+        val sharedPreferences = context.getSharedPreferences(MY_PREF_KEY, Context.MODE_PRIVATE)
+        sharedPreferences.edit() { clear() }
+    }
 }

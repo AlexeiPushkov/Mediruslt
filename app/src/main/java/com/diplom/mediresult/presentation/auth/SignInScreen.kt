@@ -60,14 +60,12 @@ fun SignInScreen(
 
     val context = LocalContext.current
 
-    var passwordVisible by remember { mutableStateOf(false) }
-
     val viewModel: SupabaseAuthViewModel = viewModel()
+
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val state = viewModel.signUpstate
     val scrollState = rememberScrollState()
-    var currentUserState by remember { mutableStateOf("") }
-    val userState by viewModel.userState
     val date = remember { mutableStateOf(LocalDate.now())}
 
     Column(
@@ -206,7 +204,10 @@ fun SignInScreen(
         Spacer(
             modifier = Modifier.height(30.dp)
         )
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.9f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -230,6 +231,7 @@ fun SignInScreen(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
                 viewModel.signUp(
@@ -241,7 +243,6 @@ fun SignInScreen(
                     date = date.value.toString(),
                     gender = viewModel.signUpstate.gender.toString(),
                     pathImg = null,
-                    idRole = 1
                 )
             },
             colors = ButtonDefaults.buttonColors(
@@ -263,7 +264,7 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
     val radioOptions = listOf("Мужской", "Женский")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
-    Column(modifier.selectableGroup()) {
+    Column(modifier.selectableGroup().width(300.dp)) {
         radioOptions.forEach { text ->
             Row(
                 Modifier

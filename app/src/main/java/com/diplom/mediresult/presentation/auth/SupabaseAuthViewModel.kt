@@ -14,6 +14,7 @@ import com.diplom.mediresult.data.model.UserState
 import com.diplom.mediresult.data.network.SupabaseClient.supabase
 import com.diplom.mediresult.presentation.nvgraph.Route
 import com.diplom.mediresult.util.SharedPreferencesKey
+import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
@@ -36,7 +37,6 @@ class SupabaseAuthViewModel(): ViewModel() {
         date: String,
         gender: String,
         pathImg: String?,
-        idRole: Int
     ){
         viewModelScope.launch {
             try {
@@ -53,10 +53,10 @@ class SupabaseAuthViewModel(): ViewModel() {
                 }
                 saveToken(context)
                 _userState.value = UserState.Success("Успешная регистрация")
-                isUserLoggedIn(
-                    context = context,
-                    navController = navController
-                )
+                supabase.auth.resendEmail(OtpType.Email.SIGNUP, userEmail)
+                if (isUserLoggedIn(context = context,)){
+                    navController.navigate(Route.MainScreen.route)
+                }
             }catch (e: Exception){
                 _userState.value = UserState.Error("Error: $e")
             }
@@ -123,11 +123,20 @@ class SupabaseAuthViewModel(): ViewModel() {
                     password = userPassword
                 }
                 saveToken(context)
-                isUserLoggedIn(
-                    context = context,
-                    navController = navController
-                )
+                if (isUserLoggedIn(context = context,)){
+                    navController.navigate(Route.MainScreen.route)
+                }
             } catch (e: Exception) {
+                if (e.message?.contains("Email not confirmed") == true) {
+                    // If the email isn’t confirmed, trigger resend.
+                    //supabase.auth.resendEmail(OtpType.Email.SIGNUP, userEmail)
+                    saveToken(context)
+                    if (isUserLoggedIn(context = context,)){
+                        navController.navigate(Route.MainScreen.route)
+                    }
+                } else {
+                    _userState.value = UserState.Error("Неправильная почта или пароль")
+                }
             }
         }
     }
@@ -135,11 +144,14 @@ class SupabaseAuthViewModel(): ViewModel() {
 
 
     fun logoutUser(
+        context: Context,
         navController: NavController
     ) {
         viewModelScope.launch {
             try {
                 supabase.auth.signOut()
+                val sharedPref = SharedPreferencesKey(context)
+                sharedPref.saveStringData("accessToken", "")
                 navController.navigate(Route.LoginScreen.route)
 
             } catch (e: Exception) {
@@ -149,22 +161,20 @@ class SupabaseAuthViewModel(): ViewModel() {
 
     fun isUserLoggedIn(
         context: Context,
-        navController: NavController
-    ) {
-        viewModelScope.launch {
-            try {
-                val token = getToken(context).toString()
-                if (token.isEmpty()) {
-                    _userState.value = UserState.Error("Неправильная почта или пароль")
-                } else {
+    ): Boolean {
+        val token: String = getToken(context).toString()
+        if (token.isEmpty()) {
+            return false
+        } else {
+            viewModelScope.launch {
+                try {
                     supabase.auth.retrieveUser(token)
                     supabase.auth.refreshCurrentSession()
                     saveToken(context)
-                    navController.navigate(Route.MainScreen.route)
+                }catch (e: Exception) {
                 }
-            } catch (e: Exception) {
             }
+            return true
         }
-
     }
 }
