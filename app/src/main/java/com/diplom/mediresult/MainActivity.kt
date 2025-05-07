@@ -12,13 +12,9 @@ import androidx.navigation.compose.rememberNavController
 import com.diplom.mediresult.presentation.auth.SupabaseAuthViewModel
 import com.diplom.mediresult.presentation.nvgraph.NavigationGraph
 import com.diplom.mediresult.presentation.nvgraph.Route
-import com.diplom.mediresult.presentation.onboarding.OnBoardingScreen
 import com.diplom.mediresult.ui.theme.MediresultTheme
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

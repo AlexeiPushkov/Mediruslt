@@ -111,7 +111,7 @@ fun SignInScreen(
             placeholder = { Text("Иванов Иван Иванович")},
             value = state.fio,
             onValueChange = {viewModel.onEvent(SignUpFormEvent.FioChange(it))},
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
         )
         Spacer(
@@ -147,7 +147,7 @@ fun SignInScreen(
             placeholder = { Text("example@mail.com")},
             value = state.email,
             onValueChange = { viewModel.onEvent(SignUpFormEvent.EmailChanged(it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
         )
         Spacer(

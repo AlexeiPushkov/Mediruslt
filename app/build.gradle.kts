@@ -5,7 +5,6 @@ plugins {
 
     id ("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -80,9 +79,8 @@ dependencies {
     implementation(libs.realtime.kt)
     implementation(libs.ktor.client.android)
 
-    implementation(libs.hilt.android)
-    ksp(libs.dagger.hilt.android.compiler)
 
     implementation(libs.core)
     implementation(libs.sheets.compose.dialogs.calendar)
+
 }

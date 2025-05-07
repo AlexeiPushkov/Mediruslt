@@ -6,37 +6,45 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(
     modifier: Modifier = Modifier,
+    scaffoldState: BottomSheetScaffoldState,
     hint: String = "Search...",
     onQueryChange: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     val backgroundGray = Color(0xFFF5F5F9)
     val textGray = Color(0xFF7E7E9A)
+    val coroutineScope = rememberCoroutineScope()
 
     TextField(
         value = query,
         onValueChange = { newQuery ->
             query = newQuery
             onQueryChange(newQuery)
+            coroutineScope.launch {
+                scaffoldState.bottomSheetState.hide()
+            }
         },
         modifier = modifier
             .fillMaxWidth()

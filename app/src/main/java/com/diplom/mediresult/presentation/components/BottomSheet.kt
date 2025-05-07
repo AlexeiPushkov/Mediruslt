@@ -36,7 +36,6 @@ fun BottomSheet(
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberStandardBottomSheetState(
         SheetValue.Hidden))
-    val coroutineScope = rememberCoroutineScope()
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,

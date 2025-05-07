@@ -1,23 +1,29 @@
 package com.diplom.mediresult.presentation.main
 
+
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.diplom.mediresult.data.model.Analysis
-import com.diplom.mediresult.data.model.Role
 import com.diplom.mediresult.data.network.SupabaseClient.supabase
-import com.diplom.mediresult.domain.repository.RoleRepository
-import com.diplom.mediresult.domain.use_cases.RoleRepositoryImp
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(): ViewModel() {
-    private val _roleList = MutableStateFlow<List<Analysis>>(listOf())
-    val roleList: Flow<List<Analysis>> = _roleList
-
+    val bage = mutableIntStateOf(0)
+    var addButton = mutableStateListOf<Boolean>(true)
+    val analysis = Analysis(
+        id = 0,
+        name = "",
+        description = "",
+        preparation = "",
+        biometrial = "",
+        countDay = 0,
+        price = 0
+    )
+    var analysisState = mutableStateOf<Analysis>(analysis)
 
 
     suspend fun getAnalysis(id: String): Analysis {
@@ -31,10 +37,8 @@ class MainViewModel(): ViewModel() {
     }
 
     suspend fun getAnalysis(): List<Analysis> {
-        return withContext(Dispatchers.IO) {
             val result = supabase.from("Analysis")
                 .select().decodeList<Analysis>()
-            result
-        }
+            return result
     }
 }

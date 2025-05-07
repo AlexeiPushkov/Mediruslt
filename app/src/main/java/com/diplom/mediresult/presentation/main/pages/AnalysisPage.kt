@@ -7,34 +7,27 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetProperties
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.diplom.mediresult.R
 import com.diplom.mediresult.data.model.Analysis
-import com.diplom.mediresult.presentation.components.BottomSheet
 import com.diplom.mediresult.presentation.components.SearchView
 import com.diplom.mediresult.presentation.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -61,16 +53,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AnalysisPage() {
-
-
+fun AnalysisPage(
+    scaffoldState: BottomSheetScaffoldState
+) {
     val mainViewModel: MainViewModel = viewModel()
     var analyses = remember { mutableStateListOf<Analysis>() }
     var searchQuery by remember { mutableStateOf("") }
-
-
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -79,27 +70,31 @@ fun AnalysisPage() {
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(10.dp),
+        modifier = Modifier.fillMaxHeight(1f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchView(
             hint = "Искать анализы",
             onQueryChange = { query ->
                 searchQuery = query
-            }
+            },
+            scaffoldState = scaffoldState
         )
         FilterableList(
             items = analyses,
-            query = searchQuery
+            query = searchQuery,
+            scaffoldState = scaffoldState,
         )
-
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterableList(
     items: List<Analysis>,
-    query: String
+    query: String,
+    scaffoldState: BottomSheetScaffoldState,
 ) {
     val filteredItems = remember(query, items) {
         if (query.isEmpty()) {
@@ -110,15 +105,21 @@ fun FilterableList(
             }
         }
     }
-
-    LazyColumn() {
+    val mainViewModel: MainViewModel = viewModel()
+    var stateIndex = 0
+    LazyColumn(
+        modifier = Modifier.fillMaxHeight(0.85f),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         items(filteredItems) { analysis ->
             AnimatedVisibility(
                 visible = true,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                AnalysisCard(analysis = analysis)
+                AnalysisCard(analysis = analysis,scaffoldState = scaffoldState, stateIndex = stateIndex)
+                mainViewModel.addButton.add(true)
+                stateIndex++
             }
             Spacer(modifier = Modifier.height(15.dp))
         }
@@ -128,14 +129,28 @@ fun FilterableList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalysisCard(
-    analysis: Analysis
+    analysis: Analysis,
+    scaffoldState: BottomSheetScaffoldState,
+    stateIndex: Int
 ){
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val shopCartViewModel: ShopCartViewModel = viewModel(factory = ShopCartViewModel.factory)
+    val mainViewModel: MainViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .fillMaxSize(0.9f)
-            .fillMaxHeight(0.15f),
+            .fillMaxHeight(0.2f)
+            .clickable{
+                coroutineScope.launch {
+                    if (!scaffoldState.bottomSheetState.isVisible){
+                        mainViewModel.analysisState.value = analysis
+                        scaffoldState.bottomSheetState.show()
+                    }else{
+                        mainViewModel.analysisState.value = analysis
+                        scaffoldState.bottomSheetState.hide()
+                    }
+                }
+            },
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.white)
@@ -143,16 +158,7 @@ fun AnalysisCard(
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
-                .padding(10.dp)
-                .clickable{
-                    coroutineScope.launch {
-                        if (!bottomSheetScaffoldState.bottomSheetState.isVisible){
-                            bottomSheetScaffoldState.bottomSheetState.show()
-                        }else{
-                            bottomSheetScaffoldState.bottomSheetState.hide()
-                        }
-                    }
-                },
+                .padding(10.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -187,19 +193,41 @@ fun AnalysisCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Button(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    onClick = {
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.enable),
-                        disabledContainerColor = colorResource(R.color.disable)
-                    ),
-                ) {
-                    Text(
-                        text = "Добавить",
-                        color = Color.White
-                    )
+                if (mainViewModel.addButton[stateIndex]){
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
+                        onClick = {
+                            mainViewModel.addButton[stateIndex] = false
+                            mainViewModel.bage.intValue++
+                            shopCartViewModel.insertItem(analysis)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(R.color.enable),
+                            disabledContainerColor = colorResource(R.color.disable)
+                        ),
+                    ) {
+                        Text(
+                            text = "Добавить",
+                            color = Color.White
+                        )
+                    }
+                }else{
+                    OutlinedButton(
+                        modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
+                        onClick = {
+                            mainViewModel.addButton[stateIndex] = true
+                            mainViewModel.bage.intValue--
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = colorResource(R.color.white),
+                        ),
+                        border = BorderStroke(width = 1.dp, color = colorResource(R.color.enable))
+                    ) {
+                        Text(
+                            text = "Убрать",
+                            color = colorResource(R.color.enable)
+                        )
+                    }
                 }
             }
         }

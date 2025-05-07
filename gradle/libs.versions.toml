@@ -5,8 +5,6 @@ compiler = "1.5.15"
 converterGson = "2.9.0"
 core = "1.2.0"
 coreSplashscreen = "1.0.1"
-hiltAndroidCompilerVersion = "2.56.1"
-hiltAndroidVersion = "2.56.1"
 kotlin = "2.1.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -19,6 +17,7 @@ composeBom = "2025.04.01"
 lifecycleViewmodelCompose = "2.8.7"
 navigationCompose = "2.8.9"
 retrofit = "2.9.0"
+
 
 [libraries]
 androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
@@ -46,8 +45,6 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 realtime-kt = { module = "io.github.jan-tennert.supabase:realtime-kt" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt" }
-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompilerVersion" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
 sheets-compose-dialogs-calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "calendar" }
 
 [plugins]
