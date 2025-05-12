@@ -1,9 +1,7 @@
-package com.diplom.mediresult.presentation.auth
+package com.diplom.mediresult.presentation.auth.signup
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.sql.Date
-import java.time.LocalDate
 
 data class SignUpFormState @RequiresApi(Build.VERSION_CODES.O) constructor(
     val email: String = "",

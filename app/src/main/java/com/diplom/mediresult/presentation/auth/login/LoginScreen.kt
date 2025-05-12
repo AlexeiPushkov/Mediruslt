@@ -1,4 +1,4 @@
-package com.diplom.mediresult.presentation.auth
+package com.diplom.mediresult.presentation.auth.login
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.diplom.mediresult.R
 import com.diplom.mediresult.data.model.UserState
+import com.diplom.mediresult.presentation.auth.SupabaseAuthViewModel
 import com.diplom.mediresult.presentation.nvgraph.Route
 
 @RequiresApi(Build.VERSION_CODES.O)

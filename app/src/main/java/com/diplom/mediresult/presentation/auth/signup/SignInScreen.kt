@@ -1,4 +1,4 @@
-package com.diplom.mediresult.presentation.auth
+package com.diplom.mediresult.presentation.auth.signup
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.diplom.mediresult.R
+import com.diplom.mediresult.presentation.auth.SupabaseAuthViewModel
 import com.diplom.mediresult.presentation.components.CustomDatePicker
-import com.diplom.mediresult.presentation.components.CustomDatePickerPreview
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -259,8 +259,10 @@ fun SignInScreen(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
+    val viewModel: SupabaseAuthViewModel = viewModel()
     val radioOptions = listOf("Мужской", "Женский")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
@@ -280,7 +282,9 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
             ) {
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = null, // null recommended for accessibility with screen readers
+                    onClick = {
+                        if (text == "Мужской") viewModel.onEvent(SignUpFormEvent.GenderChange(true)) else viewModel.onEvent(SignUpFormEvent.GenderChange(false))
+                    },
                     colors =  RadioButtonDefaults.colors(
                         selectedColor = Color.Blue
                     )

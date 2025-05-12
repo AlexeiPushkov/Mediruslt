@@ -1,4 +1,4 @@
-package com.diplom.mediresult.presentation.auth
+package com.diplom.mediresult.presentation.auth.login
 
 data class LoginFormState(
     val email: String = "",

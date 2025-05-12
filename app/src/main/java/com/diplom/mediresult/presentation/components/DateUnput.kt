@@ -1,11 +1,13 @@
 package com.diplom.mediresult.presentation.components
 
 import android.os.Build
+import android.provider.SyncStateContract
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -32,11 +34,14 @@ fun CustomDatePicker(
     onValueChange: (LocalDate) -> Unit
 ) {
 
-    val open = remember { mutableStateOf(false)}
+    val open = remember { mutableStateOf(false) }
 
     if (open.value) {
         CalendarDialog(
-            state = rememberUseCaseState(visible = true, true, onCloseRequest = { open.value = false } ),
+            state = rememberUseCaseState(
+                visible = true,
+                true,
+                onCloseRequest = { open.value = false }),
             config = CalendarConfig(
                 yearSelection = true,
                 style = CalendarStyle.MONTH,
@@ -50,41 +55,45 @@ fun CustomDatePicker(
     }
     val backgroundGray = Color(0xFFF5F5F9)
     val textGray = Color(0xFF7E7E9A)
-    MediresultTheme {
-        TextField(
-            modifier = Modifier
-                .width(300.dp)
-                .clickable { //Click event
+    TextField(
+        modifier = Modifier
+            .width(300.dp)
+            .clickable {
                 open.value = true
             },
-            enabled = false,// <- Add this to make click event work
-            value = value.format(DateTimeFormatter.ISO_DATE),
-            onValueChange = {},
-            shape = RoundedCornerShape(10.dp),
-            colors = TextFieldDefaults.colors(
-                unfocusedTextColor = textGray,
-                focusedTextColor = textGray,
-                focusedContainerColor = backgroundGray,
-                unfocusedContainerColor = backgroundGray,
-                focusedLabelColor = textGray,
-                unfocusedLabelColor = textGray,
-                focusedPlaceholderColor = textGray,
-                unfocusedPlaceholderColor = textGray,
-                cursorColor = textGray,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedSupportingTextColor = textGray,
-                errorTextColor = textGray,
-                errorSupportingTextColor = textGray,
-                errorLabelColor = textGray,
-                errorCursorColor = textGray,
-                errorSuffixColor = textGray,
-                errorIndicatorColor = Color.Transparent,
-                errorContainerColor = backgroundGray
+        label = {
+            Text(
+                text = "Дата рождения"
             )
+        },
+        enabled = false,// <- Add this to make click event work
+        value = value.format(DateTimeFormatter.ISO_DATE),
+        onValueChange = {},
+        shape = RoundedCornerShape(10.dp),
+        colors = TextFieldDefaults.colors(
+            unfocusedTextColor = textGray,
+            focusedTextColor = textGray,
+            focusedContainerColor = backgroundGray,
+            unfocusedContainerColor = backgroundGray,
+            focusedLabelColor = textGray,
+            unfocusedLabelColor = textGray,
+            focusedPlaceholderColor = textGray,
+            unfocusedPlaceholderColor = textGray,
+            cursorColor = textGray,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedSupportingTextColor = textGray,
+            errorTextColor = textGray,
+            errorSupportingTextColor = textGray,
+            errorLabelColor = textGray,
+            errorCursorColor = textGray,
+            errorSuffixColor = textGray,
+            errorIndicatorColor = Color.Transparent,
+            errorContainerColor = backgroundGray
         )
-    }
+    )
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview

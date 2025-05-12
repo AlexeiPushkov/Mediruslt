@@ -1,7 +1,4 @@
-package com.diplom.mediresult.presentation.auth
-
-import java.time.LocalDate
-
+package com.diplom.mediresult.presentation.auth.signup
 
 sealed class SignUpFormEvent {
     data class EmailChanged(val email: String) : SignUpFormEvent()

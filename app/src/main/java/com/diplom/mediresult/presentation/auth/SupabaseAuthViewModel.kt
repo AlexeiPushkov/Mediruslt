@@ -12,6 +12,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.diplom.mediresult.data.model.UserState
 import com.diplom.mediresult.data.network.SupabaseClient.supabase
+import com.diplom.mediresult.presentation.auth.login.LoginFormEvent
+import com.diplom.mediresult.presentation.auth.login.LoginFormState
+import com.diplom.mediresult.presentation.auth.signup.SignUpFormEvent
+import com.diplom.mediresult.presentation.auth.signup.SignUpFormState
 import com.diplom.mediresult.presentation.nvgraph.Route
 import com.diplom.mediresult.util.SharedPreferencesKey
 import io.github.jan.supabase.auth.OtpType

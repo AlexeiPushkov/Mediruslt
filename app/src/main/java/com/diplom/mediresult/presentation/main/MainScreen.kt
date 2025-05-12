@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +59,8 @@ fun MainScreen(
 ) {
     val scrollState = rememberScrollState()
     val mainViewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
+    mainViewModel.getBadge(context)
     val navItemList = listOf(
         NavItem(label = "Анализы", icon = R.drawable.analysis, 0),
         NavItem(label = "Корзина", icon = R.drawable.outline_local_grocery_store_24, mainViewModel.bage.intValue),
@@ -65,7 +68,6 @@ fun MainScreen(
         NavItem(label = "Поддержка", icon = R.drawable.support, 0),
         NavItem(label = "Профиль", icon = R.drawable.user, 0),
     )
-    var selectedIndex by remember { mutableIntStateOf(0) }
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
     )
@@ -144,9 +146,9 @@ fun MainScreen(
                 NavigationBar {
                     navItemList.forEachIndexed { index, navItem ->
                         NavigationBarItem(
-                            selected = selectedIndex == index,
+                            selected = mainViewModel.mainIndex.intValue == index,
                             onClick = {
-                                selectedIndex = index
+                                mainViewModel.mainIndex.intValue = index
                             },
                             icon = {
                                 BadgedBox(
@@ -166,7 +168,7 @@ fun MainScreen(
                                     Image(
                                         imageVector = ImageVector.vectorResource(navItem.icon),
                                         contentDescription = "Icon",
-                                        colorFilter = ColorFilter.tint(colorResource(if (selectedIndex == index) R.color.enable else R.color.enableIcon))
+                                        colorFilter = ColorFilter.tint(colorResource(if (mainViewModel.mainIndex.intValue == index) R.color.enable else R.color.enableIcon))
                                     )
                                 }
                             },
@@ -185,7 +187,7 @@ fun MainScreen(
         ) {innerPadding->
             MainScreenContent(
                 navController = navController,
-                selectedIndex = selectedIndex,
+                selectedIndex = mainViewModel.mainIndex.intValue,
                 padding = innerPadding,
                 scaffoldState = scaffoldState
             )
@@ -208,7 +210,9 @@ fun MainScreenContent(
         0-> AnalysisPage(
             scaffoldState = scaffoldState
         )
-        1-> ShopCartPage()
+        1-> ShopCartPage(
+            navController = navController
+        )
         2-> ResultPage()
         3-> SupportPage()
         4-> ProfilePage(

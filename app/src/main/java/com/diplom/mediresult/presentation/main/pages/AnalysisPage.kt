@@ -1,5 +1,6 @@
 package com.diplom.mediresult.presentation.main.pages
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.diplom.mediresult.R
 import com.diplom.mediresult.data.model.Analysis
+import com.diplom.mediresult.data.model.ShopCart
 import com.diplom.mediresult.presentation.components.SearchView
 import com.diplom.mediresult.presentation.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -106,7 +109,6 @@ fun FilterableList(
         }
     }
     val mainViewModel: MainViewModel = viewModel()
-    var stateIndex = 0
     LazyColumn(
         modifier = Modifier.fillMaxHeight(0.85f),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -117,25 +119,24 @@ fun FilterableList(
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                AnalysisCard(analysis = analysis,scaffoldState = scaffoldState, stateIndex = stateIndex)
-                mainViewModel.addButton.add(true)
-                stateIndex++
+                AnalysisCard(analysis = analysis,scaffoldState = scaffoldState)
             }
             Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }
 
+@SuppressLint("ImplicitSamInstance")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalysisCard(
     analysis: Analysis,
     scaffoldState: BottomSheetScaffoldState,
-    stateIndex: Int
 ){
-    val shopCartViewModel: ShopCartViewModel = viewModel(factory = ShopCartViewModel.factory)
+    val context = LocalContext.current
     val mainViewModel: MainViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
+    mainViewModel.getShopCarts(context)
     Card(
         modifier = Modifier
             .fillMaxSize(0.9f)
@@ -193,13 +194,27 @@ fun AnalysisCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                if (mainViewModel.addButton[stateIndex]){
+                if (!mainViewModel.shopCartState.contains(
+                        ShopCart(
+                            name = analysis.name,
+                            price = analysis.price
+                        )
+                    )
+                ) {
                     Button(
                         modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
                         onClick = {
-                            mainViewModel.addButton[stateIndex] = false
+
+                            mainViewModel.shopCartState.add(
+                                ShopCart(
+                                    name = analysis.name,
+                                    price = analysis.price
+                                )
+                            )
+                            mainViewModel.saveShopCarts(context, mainViewModel.shopCartState)
                             mainViewModel.bage.intValue++
-                            shopCartViewModel.insertItem(analysis)
+                            mainViewModel.saveBage(context, mainViewModel.bage.intValue)
+
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(R.color.enable),
@@ -215,8 +230,15 @@ fun AnalysisCard(
                     OutlinedButton(
                         modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
                         onClick = {
-                            mainViewModel.addButton[stateIndex] = true
+                            mainViewModel.shopCartState.remove(
+                                ShopCart(
+                                    name = analysis.name,
+                                    price = analysis.price
+                                )
+                            )
+                            mainViewModel.saveShopCarts(context, mainViewModel.shopCartState)
                             mainViewModel.bage.intValue--
+                            mainViewModel.saveBage(context, mainViewModel.bage.intValue)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = colorResource(R.color.white),

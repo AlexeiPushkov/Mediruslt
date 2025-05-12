@@ -1,4 +1,4 @@
-package com.diplom.mediresult.presentation
+package com.diplom.mediresult.presentation.checkEmail
 
 import androidx.compose.runtime.Composable
 
