@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00B712</color>
+    <color name="disable">#C9D4FB</color>
+    <color name="enable">#1A6FEE</color>
+    <color name="enableIcon">#FFB8C1CC</color>
 
 </resources>

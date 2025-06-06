@@ -3,15 +3,16 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-
-    kotlin("plugin.serialization") version "2.0.21"
+    id ("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
     namespace = "com.diplom.mediresult"
     compileSdk = 35
+
+    //val key: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("supabaseKey")
+    //val url: String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("supabaseUrl")
+
 
     defaultConfig {
         applicationId = "com.diplom.mediresult"
@@ -30,6 +31,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -42,10 +44,11 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
-
+    implementation(libs.androidx.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
@@ -63,12 +66,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.datastore.preferences)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.lifecycle.viewmodel.compose)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -78,4 +78,15 @@ dependencies {
     implementation(libs.postgrest.kt)
     implementation(libs.auth.kt)
     implementation(libs.realtime.kt)
+    implementation(libs.ktor.client.android)
+
+
+    implementation(libs.core)
+    implementation(libs.sheets.compose.dialogs.calendar)
+
+    implementation(libs.gson)
+
+    implementation(libs.argon2kt)
+
+    implementation(libs.bouquet)
 }
