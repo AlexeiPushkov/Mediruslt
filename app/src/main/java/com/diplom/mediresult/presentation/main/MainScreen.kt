@@ -28,10 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -46,10 +42,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.diplom.mediresult.R
 import com.diplom.mediresult.presentation.main.pages.AnalysisPage
-import com.diplom.mediresult.presentation.main.pages.ProfilePage
-import com.diplom.mediresult.presentation.main.pages.ResultPage
+import com.diplom.mediresult.presentation.main.pages.profile.ProfilePage
+import com.diplom.mediresult.presentation.main.pages.resultats.ResultPage
 import com.diplom.mediresult.presentation.main.pages.ShopCartPage
-import com.diplom.mediresult.presentation.main.pages.SupportPage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -65,7 +60,7 @@ fun MainScreen(
         NavItem(label = "Анализы", icon = R.drawable.analysis, 0),
         NavItem(label = "Корзина", icon = R.drawable.outline_local_grocery_store_24, mainViewModel.bage.intValue),
         NavItem(label = "Результат", icon = R.drawable.result, 0),
-        NavItem(label = "Поддержка", icon = R.drawable.support, 0),
+        //NavItem(label = "Поддержка", icon = R.drawable.support, 0),
         NavItem(label = "Профиль", icon = R.drawable.user, 0),
     )
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -213,9 +208,13 @@ fun MainScreenContent(
         1-> ShopCartPage(
             navController = navController
         )
-        2-> ResultPage()
-        3-> SupportPage()
-        4-> ProfilePage(
+        2-> ResultPage(
+            navController = navController
+        )
+        /*3-> SupportPage(
+            navController
+        )*/
+        3-> ProfilePage(
             navController
         )
     }

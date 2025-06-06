@@ -60,7 +60,13 @@ fun FormOrder(
         val backgroundGray = Color(0xFFF5F5F9)
         val textGray = Color(0xFF7E7E9A)
         val context = LocalContext.current
-        val address = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
+        val address = arrayOf(
+            "Богатырский проспект, д.20",
+            "Гражданский проспект, д.2",
+            "Хасанская улица, д.1",
+            "Благодатная улица, д.39",
+            "Проспект Славы, д.87"
+        )
         var expanded by remember { mutableStateOf(false) }
         var selectedText by remember { mutableStateOf(address[0]) }
         orderForm.onEvent(OrderFormEvent.AddressChanged(address[0]))
@@ -217,7 +223,7 @@ fun FormOrder(
                     mainViewModel.saveShopCarts(context, mainViewModel.shopCartState)
                     mainViewModel.bage.intValue = 0
                     mainViewModel.saveBage(context, mainViewModel.bage.intValue)
-                    navController.navigate(Route.MainScreen.route)
+                    navController.navigate(Route.OrderSuccess.route)
                 }
             },
             colors = ButtonDefaults.buttonColors(

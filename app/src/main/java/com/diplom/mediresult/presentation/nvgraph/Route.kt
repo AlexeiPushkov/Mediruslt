@@ -14,4 +14,12 @@ sealed class Route(
     object MainScreen : Route(route = "Main")
 
     object FormOrder : Route(route = "FormOrder")
+
+    object OrderSuccess : Route(route = "OrderSuccess")
+
+    object CheckScreen : Route(route = "Check")
+
+    object SupportScreen : Route(route = "Support")
+
+    object PDFScreen : Route(route = "PDF")
 }

@@ -2,6 +2,8 @@ package com.diplom.mediresult.presentation.main.pages
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -48,6 +50,7 @@ import com.diplom.mediresult.presentation.main.MainViewModel
 import com.diplom.mediresult.presentation.nvgraph.Route
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShopCartPage(
     navController: NavController
@@ -56,7 +59,7 @@ fun ShopCartPage(
     val context = LocalContext.current
     mainViewModel.getPrice(mainViewModel.shopCartState)
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(bottom = 40.dp, start = 16.dp, end = 16.dp, top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -84,15 +87,21 @@ fun ShopCartPage(
         val mainViewModel: MainViewModel = viewModel()
         mainViewModel.getShopCarts(context)
         if (mainViewModel.shopCartState.isEmpty()) {
-            Text(
-                text = "ShopCartPage"
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Корзина пуста"
+                )
+            }
         }
         else{
             val setList = mutableListOf<ShopCart>()
             setList.addAll(mainViewModel.shopCartState)
             LazyColumn(
-                modifier = Modifier.heightIn(650.dp),
+                modifier = Modifier.height(500.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(setList) { shopCart ->
@@ -140,6 +149,7 @@ fun ShopCartPage(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("ImplicitSamInstance")
 @Composable
 fun AnalysisCard(

@@ -62,8 +62,6 @@ fun SignInScreen(
 
     val viewModel: SupabaseAuthViewModel = viewModel()
 
-    var passwordVisible by remember { mutableStateOf(false) }
-
     val state = viewModel.signUpstate
     val scrollState = rememberScrollState()
     val date = remember { mutableStateOf(LocalDate.now())}
@@ -99,18 +97,22 @@ fun SignInScreen(
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedSupportingTextColor = textGray,
                 errorTextColor = textGray,
-                errorSupportingTextColor = textGray,
+                errorSupportingTextColor = Color.Red,
                 errorLabelColor = textGray,
                 errorCursorColor = textGray,
                 errorSuffixColor = textGray,
                 errorIndicatorColor = Color.Transparent,
                 errorContainerColor = backgroundGray
-
             ),
-            label = { Text("Фио") },
+            label = { Text("ФИО") },
             placeholder = { Text("Иванов Иван Иванович")},
+            supportingText = {if (viewModel.validations[0])Text("ФИО должен содержать кириллицу и пробелы")},
+            isError = viewModel.validations[0],
             value = state.fio,
-            onValueChange = {viewModel.onEvent(SignUpFormEvent.FioChange(it))},
+            onValueChange = {
+                viewModel.onEvent(SignUpFormEvent.FioChange(it))
+                viewModel.validationsFIO()
+            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
         )
@@ -135,18 +137,22 @@ fun SignInScreen(
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedSupportingTextColor = textGray,
                 errorTextColor = textGray,
-                errorSupportingTextColor = textGray,
+                errorSupportingTextColor = Color.Red,
                 errorLabelColor = textGray,
                 errorCursorColor = textGray,
                 errorSuffixColor = textGray,
                 errorIndicatorColor = Color.Transparent,
                 errorContainerColor = backgroundGray
-
             ),
             label = { Text("E-mail") },
             placeholder = { Text("example@mail.com")},
+            supportingText = {if (viewModel.validations[1])Text("Должен соответствовать структуре email и содержать 6 символов до '@'")},
+            isError = viewModel.validations[1],
             value = state.email,
-            onValueChange = { viewModel.onEvent(SignUpFormEvent.EmailChanged(it)) },
+            onValueChange = {
+                viewModel.onEvent(SignUpFormEvent.EmailChanged(it))
+                viewModel.validationsEmail()
+            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
         )
@@ -171,7 +177,7 @@ fun SignInScreen(
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedSupportingTextColor = textGray,
                 errorTextColor = textGray,
-                errorSupportingTextColor = textGray,
+                errorSupportingTextColor = Color.Red,
                 errorLabelColor = textGray,
                 errorCursorColor = textGray,
                 errorSuffixColor = textGray,
@@ -180,8 +186,13 @@ fun SignInScreen(
 
             ),
             label = { Text("Пароль") },
+            supportingText = {if (viewModel.validations[2])Text("Пароль должен быть не короче 6 символов")},
+            isError = viewModel.validations[2],
             value = state.password,
-            onValueChange = {viewModel.onEvent(SignUpFormEvent.PasswordChanged(it))},
+            onValueChange = {
+                viewModel.onEvent(SignUpFormEvent.PasswordChanged(it))
+                viewModel.validationsPassword()
+            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
         )
@@ -227,13 +238,23 @@ fun SignInScreen(
                     fontSize = 15.sp,
                     color = Color(0xFF3A82F7),
                     modifier = Modifier
-                        .clickable { /* Handle Sign up click */ }
+                        .clickable {
+
+                        }
+                )
+            }
+            if(!state.acceptedTerms){
+                Text(
+                    text = "Необходимо принять соглашение",
+                    color = Color.Red,
+                    fontSize = 16.sp
                 )
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
+                if (!viewModel.validations[0] && !viewModel.validations[1] && !viewModel.validations[2] && state.acceptedTerms)
                 viewModel.signUp(
                     context = context,
                     navController = navController,
@@ -274,8 +295,14 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
                     .height(56.dp)
                     .selectable(
                         selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
-                        role = Role.RadioButton
+                        onClick = {
+                            onOptionSelected(text)
+                            if (selectedOption == "Мужской")
+                                viewModel.onEvent(SignUpFormEvent.GenderChange(true))
+                            else
+                                viewModel.onEvent(SignUpFormEvent.GenderChange(false))
+                            },
+                        role = Role.RadioButton,
                     )
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -283,7 +310,10 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
                 RadioButton(
                     selected = (text == selectedOption),
                     onClick = {
-                        if (text == "Мужской") viewModel.onEvent(SignUpFormEvent.GenderChange(true)) else viewModel.onEvent(SignUpFormEvent.GenderChange(false))
+                        if (selectedOption == "Мужской")
+                            viewModel.onEvent(SignUpFormEvent.GenderChange(true))
+                        else
+                            viewModel.onEvent(SignUpFormEvent.GenderChange(false))
                     },
                     colors =  RadioButtonDefaults.colors(
                         selectedColor = Color.Blue

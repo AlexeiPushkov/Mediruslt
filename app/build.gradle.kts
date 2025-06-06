@@ -86,4 +86,7 @@ dependencies {
 
     implementation(libs.gson)
 
+    implementation(libs.argon2kt)
+
+    implementation(libs.bouquet)
 }

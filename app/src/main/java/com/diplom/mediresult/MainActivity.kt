@@ -13,6 +13,7 @@ import com.diplom.mediresult.presentation.auth.SupabaseAuthViewModel
 import com.diplom.mediresult.presentation.nvgraph.NavigationGraph
 import com.diplom.mediresult.presentation.nvgraph.Route
 import com.diplom.mediresult.ui.theme.MediresultTheme
+import com.diplom.mediresult.util.SharedPreferencesKey
 
 
 class MainActivity : ComponentActivity() {
@@ -25,18 +26,17 @@ class MainActivity : ComponentActivity() {
                 val navigationController = rememberNavController()
 
                 val context = LocalContext.current
-
                 val viewModel: SupabaseAuthViewModel = viewModel()
                 if(viewModel.isUserLoggedIn(context = context)){
                     NavigationGraph(
                         navController = navigationController,
-                        startDestination = Route.MainScreen.route
+                        startDestination = Route.MainScreen.route,
                     )
                 }
                 else{
                     NavigationGraph(
                         navController = navigationController,
-                        startDestination = Route.OnBoardingScreen.route
+                        startDestination = Route.OnBoardingScreen.route,
                     )
                 }
             }

@@ -11,18 +11,22 @@ import com.diplom.mediresult.presentation.onboarding.OnBoardingScreen
 import com.diplom.mediresult.presentation.auth.login.LoginScreen
 import com.diplom.mediresult.presentation.main.MainScreen
 import com.diplom.mediresult.presentation.auth.signup.SignInScreen
+import com.diplom.mediresult.presentation.formOrder.CheckScreen
 import com.diplom.mediresult.presentation.formOrder.FormOrder
+import com.diplom.mediresult.presentation.formOrder.OrderSuccessScreen
+import com.diplom.mediresult.presentation.main.pages.support.MessageScreen
+import com.diplom.mediresult.presentation.pdf.PDF
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
     ){
         composable(Route.OnBoardingScreen.route){
             OnBoardingScreen(
@@ -48,11 +52,34 @@ fun NavigationGraph(
                 navController = navController
             )
         }
+
         composable(Route.FormOrder.route) {
             FormOrder(
                 navController = navController
             )
         }
+        composable(Route.OrderSuccess.route) {
+            OrderSuccessScreen(
+                navController = navController
+            )
+        }
+
+        composable(Route.CheckScreen.route) {
+            CheckScreen(
+                navController = navController
+            )
+        }
+
+        composable(Route.SupportScreen.route) {
+            MessageScreen(
+                navController = navController
+            )
+        }
+
+        composable(Route.PDFScreen.route) {
+            PDF()
+        }
+
 
     }
 }

@@ -49,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.diplom.mediresult.R
 import com.diplom.mediresult.data.model.Analysis
 import com.diplom.mediresult.data.model.ShopCart
+import com.diplom.mediresult.presentation.components.CircleProgressBar
 import com.diplom.mediresult.presentation.components.SearchView
 import com.diplom.mediresult.presentation.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -68,7 +69,9 @@ fun AnalysisPage(
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
+            mainViewModel.loading.value = true
             analyses.addAll(mainViewModel.getAnalysis())
+            mainViewModel.loading.value = false
         }
     }
 
@@ -92,6 +95,7 @@ fun AnalysisPage(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterableList(
@@ -109,6 +113,7 @@ fun FilterableList(
         }
     }
     val mainViewModel: MainViewModel = viewModel()
+    CircleProgressBar(isDisplayed = mainViewModel.loading.value)
     LazyColumn(
         modifier = Modifier.fillMaxHeight(0.85f),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -126,6 +131,7 @@ fun FilterableList(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("ImplicitSamInstance")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,12 +147,12 @@ fun AnalysisCard(
         modifier = Modifier
             .fillMaxSize(0.9f)
             .fillMaxHeight(0.2f)
-            .clickable{
+            .clickable {
                 coroutineScope.launch {
-                    if (!scaffoldState.bottomSheetState.isVisible){
+                    if (!scaffoldState.bottomSheetState.isVisible) {
                         mainViewModel.analysisState.value = analysis
                         scaffoldState.bottomSheetState.show()
-                    }else{
+                    } else {
                         mainViewModel.analysisState.value = analysis
                         scaffoldState.bottomSheetState.hide()
                     }
@@ -158,7 +164,8 @@ fun AnalysisCard(
         ),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -202,7 +209,9 @@ fun AnalysisCard(
                     )
                 ) {
                     Button(
-                        modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .width(130.dp),
                         onClick = {
 
                             mainViewModel.shopCartState.add(
@@ -228,7 +237,9 @@ fun AnalysisCard(
                     }
                 }else{
                     OutlinedButton(
-                        modifier = Modifier.align(Alignment.CenterVertically).width(130.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .width(130.dp),
                         onClick = {
                             mainViewModel.shopCartState.remove(
                                 ShopCart(

@@ -1,7 +1,6 @@
 package com.diplom.mediresult.presentation.components
 
 import android.os.Build
-import android.provider.SyncStateContract
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.width
@@ -15,9 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.diplom.mediresult.ui.theme.MediresultTheme
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -94,18 +91,5 @@ fun CustomDatePicker(
     )
 }
 
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun CustomDatePickerPreview(){
-    MediresultTheme {
-        val date = remember { mutableStateOf(LocalDate.now())}
-        CustomDatePicker(
-            value = date.value,
-            onValueChange = {date.value = it}
-        )
-    }
-}
 
 

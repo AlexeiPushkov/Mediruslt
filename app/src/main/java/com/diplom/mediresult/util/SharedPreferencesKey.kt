@@ -37,6 +37,16 @@ class SharedPreferencesKey(
         return sharedPreferences.getString(key, null)
     }
 
+    fun savePath(key: String, data: String){
+        val sharedPreferences = context.getSharedPreferences(MY_PREF_KEY, Context.MODE_PRIVATE)
+        sharedPreferences.edit { putString(key, data) }
+    }
+
+    fun getPath(key: String): String? {
+        val sharedPreferences = context.getSharedPreferences(MY_PREF_KEY, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(key, null)
+    }
+
     fun saveShopCart(key: String, data: Set<ShopCart>){
         val listShopCartGson = Gson().toJson(data)
         val sharedPreferences = context.getSharedPreferences(MY_PREF_KEY, Context.MODE_PRIVATE)
