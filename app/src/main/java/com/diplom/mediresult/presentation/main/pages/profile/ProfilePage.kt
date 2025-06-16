@@ -62,6 +62,8 @@ fun ProfilePage(
         mainViewModel.onEvent(ProfileEvent.FioChange(user.fio))
         mainViewModel.onEvent(ProfileEvent.GenderChange(user.gender))
         mainViewModel.onEvent(ProfileEvent.DateChange(user.dateOfBirth))
+        if (user.phone.isNullOrEmpty()) mainViewModel.onEvent(ProfileEvent.PhoneChange("")) else mainViewModel.onEvent(
+            ProfileEvent.PhoneChange(user.phone))
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -138,6 +140,46 @@ fun ProfilePage(
         Spacer(
             modifier = Modifier.height(30.dp)
         )
+        TextField(
+            modifier = Modifier
+                .width(300.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedTextColor = textGray,
+                focusedTextColor = textGray,
+                focusedContainerColor = backgroundGray,
+                unfocusedContainerColor = backgroundGray,
+                focusedLabelColor = textGray,
+                unfocusedLabelColor = textGray,
+                focusedPlaceholderColor = textGray,
+                unfocusedPlaceholderColor = textGray,
+                cursorColor = textGray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedSupportingTextColor = textGray,
+                errorTextColor = textGray,
+                errorSupportingTextColor = Color.Red,
+                errorLabelColor = textGray,
+                errorCursorColor = textGray,
+                errorSuffixColor = textGray,
+                errorIndicatorColor = Color.Transparent,
+                errorContainerColor = backgroundGray
+            ),
+            label = { Text("Номер телефона") },
+            placeholder = { Text("+7 (999) 999 99-99")},
+            supportingText = {if (mainViewModel.validationsPhone.value)Text("Не соответствует структуре номера телефона")},
+            isError = mainViewModel.validationsPhone.value,
+            value = state.phone,
+            onValueChange = {
+                mainViewModel.onEvent(ProfileEvent.PhoneChange(it))
+                mainViewModel.validationsPhone()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true,
+        )
+        Spacer(
+            modifier = Modifier.height(30.dp)
+        )
         CustomDatePicker(
             value = date.value,
             onValueChange = {
@@ -162,6 +204,7 @@ fun ProfilePage(
                         fio = mainViewModel.state.fio,
                         date = if (date.value != LocalDate.now()) date.value.toString() else mainViewModel.state.date,
                         gender = mainViewModel.state.gender.toString(),
+                        phone = mainViewModel.state.phone
                     )
                 }
             },
@@ -189,8 +232,13 @@ fun ProfilePage(
 fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
     val mainViewModel: MainViewModel = viewModel()
     val radioOptions = listOf("Мужской", "Женский")
-
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf( if (mainViewModel.state.gender) radioOptions[0] else radioOptions[1]) }
+    var gender = 0
+    gender = if (mainViewModel.state.gender){
+        0
+    }else {
+        1
+    }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf( radioOptions[gender] ) }
     Column(modifier.selectableGroup().width(300.dp)) {
         radioOptions.forEach { text ->
             Row(

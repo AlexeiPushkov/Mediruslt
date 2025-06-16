@@ -24,8 +24,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MediresultTheme {
                 val navigationController = rememberNavController()
-
                 val context = LocalContext.current
+
                 val viewModel: SupabaseAuthViewModel = viewModel()
                 if(viewModel.isUserLoggedIn(context = context)){
                     NavigationGraph(

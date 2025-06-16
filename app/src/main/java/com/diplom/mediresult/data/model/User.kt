@@ -21,5 +21,7 @@ data class User(
     @SerialName("path_img")
     val path: String?,
     @SerialName("id_Role")
-    val idRole: Int
+    val idRole: Int,
+    @SerialName("phone")
+    val phone: String?
 )

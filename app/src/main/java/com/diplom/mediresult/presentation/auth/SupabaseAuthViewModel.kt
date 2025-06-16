@@ -47,7 +47,7 @@ class SupabaseAuthViewModel(): ViewModel() {
         fio: String,
         date: String,
         gender: String,
-        pathImg: String?,
+        phone: String,
     ){
         viewModelScope.launch {
             try {
@@ -70,7 +70,7 @@ class SupabaseAuthViewModel(): ViewModel() {
                         put("fio", fio)
                         put("date", date.toString())
                         put("gender", gender)
-                        put("path_img",pathImg)
+                        put("phone", "+7$phone")
                         put("password", pass)
                     }
                 }
@@ -130,6 +130,9 @@ class SupabaseAuthViewModel(): ViewModel() {
             }
             is SignUpFormEvent.GenderChange -> {
                 signUpstate = signUpstate.copy(gender = event.gender)
+            }
+            is SignUpFormEvent.PhoneChange -> {
+                signUpstate = signUpstate.copy(phone = event.phone)
             }
         }
     }
@@ -205,6 +208,10 @@ class SupabaseAuthViewModel(): ViewModel() {
 
     fun validationsPassword(){
         validations[2] = signUpstate.password.length < 5
+    }
+
+    fun validationsPhone(){
+        validations[3] = !Patterns.PHONE.matcher(signUpstate.phone).matches()
     }
 
     fun isUserLoggedIn(

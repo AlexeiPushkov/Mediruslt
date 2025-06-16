@@ -12,5 +12,6 @@ data class SignUpFormState @RequiresApi(Build.VERSION_CODES.O) constructor(
     val acceptedTerms: Boolean = false,
     val pathImg: String? = null,
     val idRole: Int = 1,
+    val phone: String = "",
     val isLoading: Boolean = false
 )

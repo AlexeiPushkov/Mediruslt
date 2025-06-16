@@ -41,6 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.diplom.mediresult.R
 import com.diplom.mediresult.presentation.components.CustomDatePicker
+import com.diplom.mediresult.presentation.components.DateOrder
 import com.diplom.mediresult.presentation.main.MainViewModel
 import com.diplom.mediresult.presentation.nvgraph.Route
 import java.time.LocalDate
@@ -143,7 +144,7 @@ fun FormOrder(
             }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        CustomDatePicker(
+        DateOrder(
             value = date.value,
             onValueChange = {
                 date.value = it

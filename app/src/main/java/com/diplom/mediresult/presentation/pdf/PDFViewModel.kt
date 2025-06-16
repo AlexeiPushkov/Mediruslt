@@ -12,13 +12,7 @@ import com.rizzi.bouquet.VerticalPdfReaderState
 import kotlinx.coroutines.launch
 
 class PDFViewModel: ViewModel() {
-    val uriPolicy = "file://assets/policy.pdf".toUri()
     val path = mutableStateOf<String?>("")
-
-    val pdfPolicyReaderState = VerticalPdfReaderState(
-        resource = ResourceType.Local(uri = uriPolicy),
-        isZoomEnable = true
-    )
 
     fun pdf(context: Context): VerticalPdfReaderState{
         getPath(context = context)
@@ -28,8 +22,6 @@ class PDFViewModel: ViewModel() {
             isZoomEnable = true
         )
     }
-
-
 
     fun savePath(context: Context, data: String){
         viewModelScope.launch {

@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.diplom.mediresult.R
+import com.diplom.mediresult.domain.use_cases.ValidationPhone
 import com.diplom.mediresult.presentation.auth.SupabaseAuthViewModel
 import com.diplom.mediresult.presentation.components.CustomDatePicker
 import java.time.LocalDate
@@ -61,6 +62,8 @@ fun SignInScreen(
     val context = LocalContext.current
 
     val viewModel: SupabaseAuthViewModel = viewModel()
+
+    val mask = ValidationPhone("+7 (###) ### ##-##")
 
     val state = viewModel.signUpstate
     val scrollState = rememberScrollState()
@@ -183,6 +186,48 @@ fun SignInScreen(
                 errorSuffixColor = textGray,
                 errorIndicatorColor = Color.Transparent,
                 errorContainerColor = backgroundGray
+            ),
+            label = { Text("Номер телефона") },
+            placeholder = { Text("+7 (999) 999 99-99")},
+            supportingText = {if (viewModel.validations[3])Text("Не соответствует структуре номера телефона")},
+            isError = viewModel.validations[3],
+            value = state.phone,
+            onValueChange = {
+                viewModel.onEvent(SignUpFormEvent.PhoneChange(it.filter { char -> char.isDigit() }.take(10)))
+
+                viewModel.validationsPhone()
+            },
+            visualTransformation = mask,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true,
+        )
+        Spacer(
+            modifier = Modifier.height(30.dp)
+        )
+        TextField(
+            modifier = Modifier
+                .width(300.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedTextColor = textGray,
+                focusedTextColor = textGray,
+                focusedContainerColor = backgroundGray,
+                unfocusedContainerColor = backgroundGray,
+                focusedLabelColor = textGray,
+                unfocusedLabelColor = textGray,
+                focusedPlaceholderColor = textGray,
+                unfocusedPlaceholderColor = textGray,
+                cursorColor = textGray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedSupportingTextColor = textGray,
+                errorTextColor = textGray,
+                errorSupportingTextColor = Color.Red,
+                errorLabelColor = textGray,
+                errorCursorColor = textGray,
+                errorSuffixColor = textGray,
+                errorIndicatorColor = Color.Transparent,
+                errorContainerColor = backgroundGray
 
             ),
             label = { Text("Пароль") },
@@ -254,7 +299,7 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
-                if (!viewModel.validations[0] && !viewModel.validations[1] && !viewModel.validations[2] && state.acceptedTerms)
+                if (!viewModel.validations[0] && !viewModel.validations[1] && !viewModel.validations[2] && state.acceptedTerms && !viewModel.validations[3])
                 viewModel.signUp(
                     context = context,
                     navController = navController,
@@ -263,7 +308,7 @@ fun SignInScreen(
                     fio = viewModel.signUpstate.fio,
                     date = date.value.toString(),
                     gender = viewModel.signUpstate.gender.toString(),
-                    pathImg = null,
+                    phone = viewModel.signUpstate.phone,
                 )
             },
             colors = ButtonDefaults.buttonColors(

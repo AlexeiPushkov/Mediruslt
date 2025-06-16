@@ -6,5 +6,6 @@ sealed class SignUpFormEvent {
     data class FioChange(val fio: String) : SignUpFormEvent()
     data class DateChange(val date: String) : SignUpFormEvent()
     data class GenderChange(val gender: Boolean) : SignUpFormEvent()
+    data class PhoneChange(val phone: String) : SignUpFormEvent()
     data class TermsChange(val terms: Boolean) : SignUpFormEvent()
 }

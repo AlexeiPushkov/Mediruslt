@@ -3,6 +3,7 @@ package com.diplom.mediresult.presentation.main
 
 import android.content.Context
 import android.os.Build
+import android.util.Patterns
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,6 +45,7 @@ class MainViewModel(): ViewModel() {
     var loading = mutableStateOf(false)
     var state by mutableStateOf(ProfileState())
     var validations = mutableStateOf(false)
+    var validationsPhone = mutableStateOf(false)
     var success = mutableStateOf("")
 
 
@@ -111,12 +113,37 @@ class MainViewModel(): ViewModel() {
             is ProfileEvent.GenderChange -> {
                 state.copy(gender = event.gender)
             }
+            is ProfileEvent.PhoneChange -> {
+                state.copy(phone = event.phone)
+            }
         }
     }
 
     fun validationsFIO(){
         val invalidSymbolRegex = Regex("[^а-яА-Я\\s]")
         validations.value = invalidSymbolRegex.containsMatchIn(state.fio)
+    }
+
+    fun validationsPhone(){
+        validations.value = !Patterns.PHONE.matcher(state.phone).matches()
+    }
+
+    fun formatPhoneNumber(phoneNumber: String): String {
+        // Remove all non-digit characters
+        val digits = phoneNumber.filter { it.isDigit() }
+
+        // Apply formatting
+        return buildString {
+            for (i in digits.indices) {
+                when (i) {
+                    0 -> append('(')
+                    3 -> append(") ")
+                    6 -> append('-')
+                }
+                append(digits[i])
+                if (i == 9) break // no more digits
+            }
+        }
     }
 
     suspend fun getUser(): User {
@@ -135,6 +162,7 @@ class MainViewModel(): ViewModel() {
         fio: String,
         date: String,
         gender: String,
+        phone: String
     ) {
         viewModelScope.launch {
             val user = supabase.auth.retrieveUserForCurrentSession()
@@ -144,6 +172,7 @@ class MainViewModel(): ViewModel() {
                     set("fio", fio)
                     set("date", date)
                     set("gender", gender)
+                    set("phone", phone)
                 }) {
                     filter {
                         eq("id", userId)
